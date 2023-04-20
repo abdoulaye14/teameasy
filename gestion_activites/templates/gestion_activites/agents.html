@@ -1,0 +1,162 @@
+{% extends 'gestion_activites/base.html' %}
+
+{% block content %}
+
+{% load static %}
+<br>
+<br>
+<div class="global-container">
+    <nav class="side-nav">
+        <div class="nav-logo bloc-link">
+          <img src="{% static 'IMG/parametre.png' %}">
+          <h5>Management agents</h5>
+        </div>
+        {% if user.staff %}
+        <a href="{% url 'create_agent' %}" class="bloc-link">
+          <img src="{% static 'IMG/profile_defaut.jpg' %}">
+          <span class="nav-links">Ajouter un agent</span>
+        </a>
+        {% endif %}
+    </nav>
+
+    <main class="main-content">
+
+      <div class="input-control">
+        <label for="search">
+          <img src="{% static 'IMG/search.svg' %}">
+        </label>
+        <input type="text" id="search" placeholder="Trouver un agent" style="background-color:#FFF">
+      </div>
+
+      <h2 class="main-title"></h2>
+
+      <div class="table-search">
+        <h3 class="table-title">Nom</h3>
+        <h3 class="table-title">Email</h3>
+        <h3 class="table-title">Téléphone</h3>
+        <h3 class="table-title">Ville</h3>
+        <h3 class="table-title">Code postal</h3>
+        <h3 class="table-title">Actions</h3>
+      </div>
+
+      <div class="table-results"></div>
+
+    </main>
+
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript">
+const searchInput = document.querySelector("#search")
+const searchResult = document.querySelector(".table-results")
+
+
+let dataArray;
+
+async function makeRequest(url, method, body){
+  let headers = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+
+  let response = await fetch(url,{
+    method: method,
+    headers: headers,
+    body: body
+  })
+
+  return await response.json()
+}
+
+async function getAgents(){
+  let url = 'http://127.0.0.1:8000/gestion_activites/agents';
+  
+  const fields = await makeRequest(url,'get')
+  console.log("function fetch     -------------")
+  console.log(fields)
+  const data_agent = fields["content-data"]
+  dataArray = orderList(data_agent)  
+  createUserList(dataArray)
+};
+
+getAgents();
+
+function orderList(data) {
+  try {
+    const orderedData = data.sort((a,b) => {
+      if(a["fields"]["nom"].toLowerCase() < b["fields"]["nom"].toLowerCase()) {
+        return -1;
+      }
+      if(a["fields"]["nom"].toLowerCase() > b["fields"]["nom"].toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    })
+    
+    return orderedData;
+  } catch {
+    return NaN;
+  }
+};
+
+
+function createUserList(usersList) {
+  try {
+    usersList.forEach(user => {
+
+      const listItem = document.createElement("div");
+      listItem.setAttribute("class", "table-item");
+
+      listItem.innerHTML = `
+      <a href="profile_agent/${user["pk"]}"><div class="container-img">
+      <img src="images/${user["fields"]["photo"]}">
+      <p class="name" style="color:green">${user["fields"]["nom"]} ${user["fields"]["prenom"]}</p>
+      </div>&nbsp;</a>
+      <p class="email">${user["fields"]["mail"]}</p>
+      <p class="phone"><a href="tel:000000000000">${user["fields"]["telephone"]}</a></p>
+      <p class="ville">${user["fields"]["ville"]}</p>
+      <p class="code_postal">${user["fields"]["code_postal"]}</p>
+      <p><a href="profile_agent/${user["pk"]}" class="btn btn-outline-primary btn-sm col-md-6">Voir</a>
+      </p>
+      `
+      searchResult.appendChild(listItem);
+    })
+  } catch {
+    const listItem = document.createElement("div");
+    listItem.innerHTML = `
+      <p>Aucun agent trouvé</>
+      `
+      searchResult.appendChild(listItem);
+  }
+
+}
+
+searchInput.addEventListener("input", filterData)
+
+function filterData(e) {
+
+  searchResult.innerHTML = ""
+
+  const searchedString = e.target.value.toLowerCase().replace(/\s/g, "");
+
+  const filteredArr = dataArray.filter(el => 
+    el["fields"]["prenom"].toLowerCase().replace(/\s/g, "").includes(searchedString) || 
+    el["fields"]["nom"].toLowerCase().replace(/\s/g, "").includes(searchedString) ||
+    `${el["fields"]["nom"] + el["fields"]["prenom"]}`.toLowerCase().replace(/\s/g, "").includes(searchedString) ||
+    `${el["fields"]["prenom"] + el["fields"]["nom"]}`.toLowerCase().replace(/\s/g, "").includes(searchedString) ||
+    el["fields"]["ville"].toLowerCase().replace(/\s/g, "").includes(searchedString) ||
+    el["fields"]["code_postal"].toLowerCase().includes(searchedString)
+    )
+
+  createUserList(filteredArr)
+
+  const titreRecherche = document.querySelector(".main-title")
+  titreRecherche.innerHTML = ""
+  const item = document.createElement("span");
+  item.innerText="Résultat de la recherche"
+  titreRecherche.appendChild(item);
+}
+
+</script>
+{% endblock js %}

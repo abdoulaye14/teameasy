@@ -1,0 +1,179 @@
+{% extends 'gestion_activites/base.html' %}
+
+{% block content %}
+
+{% load static %}
+<br>
+<br>
+<div class="global-container">
+    <nav class="side-nav">
+        <div class="nav-logo bloc-link">
+            <img src="{% static 'IMG/parametre.png' %}">
+            <h5>Management des comptes utilisateurs</h5>
+        </div>
+        {% if user.staff %}
+        <a href="{% url 'register' %}" class="bloc-link">
+          <img src="{% static 'IMG/profile_defaut.jpg' %}">
+          <span class="nav-links">Ajouter un utilisateur</span>
+        </a>
+        {% endif %}
+    </nav>
+
+    <main class="main-content">
+
+      <div class="input-control">
+        <label for="search">
+          <img src="{% static 'IMG/search.svg' %}">
+        </label>
+        <input type="text" id="search" placeholder="Trouver un utilisateur" style="background-color:#FFF;">
+      </div>
+
+      <h2 class="main-title"></h2>
+      <div class="row">
+        <div class="table-search-users col-md text-center">
+            <h3 class="table-title">Nom d'utilisateur</h3>
+            <h3 class="table-title">Email</h3>
+            <h3 class="table-title">Rôle</h3>
+            <h3 class="table-title">Dernière connexion</h3>
+            
+            <h3 class="table-title">Actions</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="table-results col-md"></div>
+    </div>
+    </main>
+
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript">
+const searchInput = document.querySelector("#search")
+const searchResult = document.querySelector(".table-results")
+
+
+let dataArray;
+
+async function makeRequest(url, method, body){
+  let headers = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+
+  let response = await fetch(url,{
+    method: method,
+    headers: headers,
+    body: body
+  })
+
+  return await response.json()
+}
+
+async function getAgents(){
+  let url = 'http://127.0.0.1:8000/gestion_utilisateurs/users';
+  
+  const fields = await makeRequest(url,'get')
+  console.log("function fetch     -------------")
+  
+  console.log(fields)
+  const data_agent = fields["content-data"]
+  data_agent.forEach(user => {
+    delete user["fields"]["password"];
+    delete user["fields"]["user_permissions"];
+    delete user["model"];
+  })
+  dataArray = orderList(data_agent) 
+  
+  
+  createUserList(dataArray)
+};
+
+getAgents();
+
+function orderList(data) {
+  try {
+    const orderedData = data.sort((a,b) => {
+      if(a["fields"]["username"].toLowerCase() < b["fields"]["username"].toLowerCase()) {
+        return -1;
+      }
+      if(a["fields"]["username"].toLowerCase() > b["fields"]["username"].toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    })
+    
+    return orderedData;
+  } catch {
+    return NaN;
+  }
+};
+
+
+function createUserList(usersList) {
+  try {
+    usersList.forEach(user => {
+
+      const listItem = document.createElement("div");
+      listItem.setAttribute("class", "table-item-users col-sm text-center");
+      let role;
+      if (user["fields"]["staff"]) {
+        role = "administrateur";
+      } else if (user["fields"]["Responsable"]) {
+        role = "Responsable d'équipe";
+      } else {
+        role = "collaborateur";
+      }
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric', minute: 'numeric' };
+      var date = new Date(user["fields"]["last_login"]).toLocaleDateString("fr-FR", options);
+      var year = date.split(' ')[3]
+      console.log(year);
+      if(year == "1970") {
+        date = "pas encore connecté";
+      }
+      listItem.innerHTML = `
+      <a href="profil-current-user/${user["pk"]}">
+      <p class="name" style="color:green">${user["fields"]["username"]}</p>
+      </a>
+      <p class="email">${user["fields"]["email"]}</p>
+      <p class="role">${role}</a></p>
+      <p class="date">${date}</a></p>
+      <p><a href="profil-current-user/${user["pk"]}" class="btn btn-outline-dark col-xs-12 col-xs-offset-0 col-sm-offset-3 col-sm-6" style="min-width:50px;;">Voir</a>
+      </p>
+      `
+      searchResult.appendChild(listItem);
+    })
+  } catch {
+    const listItem = document.createElement("div");
+    listItem.innerHTML = `
+      <p>Aucun utilisateur trouvé</>
+      `
+      searchResult.appendChild(listItem);
+  }
+
+}
+
+searchInput.addEventListener("input", filterData)
+
+function filterData(e) {
+
+  searchResult.innerHTML = ""
+
+  const searchedString = e.target.value.toLowerCase().replace(/\s/g, "");
+
+  const filteredArr = dataArray.filter(el => 
+    el["fields"]["username"].toLowerCase().replace(/\s/g, "").includes(searchedString) || 
+    el["fields"]["email"].toLowerCase().replace(/\s/g, "").includes(searchedString)
+    )
+
+  createUserList(filteredArr)
+
+  const titreRecherche = document.querySelector(".main-title")
+  titreRecherche.innerHTML = ""
+  const item = document.createElement("span");
+  item.innerText="Résultat de la recherche"
+  titreRecherche.appendChild(item);
+}
+
+</script>
+{% endblock js %}

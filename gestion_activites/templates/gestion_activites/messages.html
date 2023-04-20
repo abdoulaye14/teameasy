@@ -1,0 +1,46 @@
+{% for message in messages %}
+    <div class="row align-items-center mt-5" style="position:absolute; left: 50%;transform: translate(-50%, -50%);z-index: 10000;opacity: 0.75;">
+
+        {% if message.tags == "success" %}
+        <div class="text-center col-md-12"  style="padding: 20px;background-color: #35b670;color: white;border-radius: 50px;">
+        {% elif message.tags == "info"  %}
+        <div class="text-center col-md-12"  style="padding: 20px;background-color: cornflowerblue;color: white;border-radius: 50px;">
+        {% elif message.tags == "warning"  %}
+        <div class="text-center col-md-12"  style="padding: 20px;background-color: orange;color: white;border-radius: 50px;">
+        {% elif message.tags == "danger"  %}
+        <div class="text-center col-md-12"  style="padding: 20px;background-color: red;color: white;border-radius: 50px;">
+        {% endif %}
+            <span class="closebtn" onclick="this.parentElement.style.display='none';" style="margin-left: 15px;
+                color: white;
+                font-weight: bold;
+                float: right;
+                font-size: 22px;
+                line-height: 20px;
+                cursor: pointer;
+                transition: 0.3s;">&times;</span>
+            {{ message }}
+        </div>
+    </div>
+    
+    
+{% endfor %}
+
+<!-- {% if messages %}
+    <ul class="align-items-center" style="position:absolute; left: 50%;transform: translate(-50%, -50%);z-index: 10000;opacity: 0.75;">
+      <br>
+      <br>
+        {% for message in messages %}
+        <div class="alert text-center" style="padding: 20px;background-color: #35b670;color: white;">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';" style="margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;">&times;</span> 
+            <strong>Succès!</strong> {{ message }}
+        </div>
+        {% endfor %}
+    </ul>
+{% endif %} -->

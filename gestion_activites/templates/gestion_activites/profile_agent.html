@@ -1,0 +1,95 @@
+{% extends extend %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            {% if agent.photo %}
+            <div class="d-flex flex-column align-items-center text-center p-3 py-3"><img class="rounded-circle mt-5" width="150px" src="{{agent.photo.url}}"><span class="font-weight-bold">{{agent.prenom}} {{agent.nom}}</span><span class="text-black-50">{{agent.mail}}</span><span> </span></div>
+            {% else %}
+            <div class="d-flex flex-column align-items-center text-center p-3 py-3"><img class="rounded-circle mt-5" width="150px" src="{% static 'IMG/profile_defaut.jpg' %}"><span class="font-weight-bold">{{agent.prenom}} {{agent.nom}}</span><span class="text-black-50">{{agent.mail}}</span><span> </span></div>
+            {% endif %}
+            <hr>
+            {% if permis and user_agent %}
+            <div class="row d-flex align-items-center text-center">
+                <span>Mettre à jour les données utilisateurs </span>
+                
+                <div class="row align-items-center">
+                <a href="{% url 'update-user' user_agent.id %}" style="text-decoration:none"><span class="border px-3 p-1 add-experience"><i class=""></i>&nbsp;Compte Utilisateur</span></a>
+                </div>
+            </div>   
+            <hr>
+                {% if user_agent.is_verified == False %}
+                <div class="row d-flex align-items-center text-center">
+                    <span>Renvoyer un mail de vérification </span>
+                    <div class="row align-items-center">
+                    <a href="{% url 'resend-mail-verify' user_agent.id %}" style="text-decoration:none"><span class="border px-3 p-1 add-experience"><i class=""></i>&nbsp;Compte Utilisateur</span></a>
+                    </div> 
+                </div>
+                <hr>
+                {% endif %}
+            {% elif user.is_staff and user_agent is None %}
+            
+            <div class="row d-flex align-items-center text-center">
+            <span class="text-center">Ajouter un compte à cet agent</span>
+            </div>
+            <div class="mt-3 text-center">
+            <a href="{% url 'register-agent' agent.id %}" style="text-decoration:none"><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Compte Utilisateur</span></a>
+            </div>
+            <hr>
+            {% endif %}
+
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Paramétrage profil Agent</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control" placeholder="{{agent.nom}}" value="" disabled/></div>
+                    <div class="col-md-6"><label class="labels">Prénom</label><input type="text" class="form-control" value="" placeholder="{{agent.prenom}}" disabled/></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Numéro de téléphone</label><input type="text" class="form-control" placeholder="{{agent.telephone}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Adresse</label><input type="text" class="form-control" placeholder="{{agent.adresse}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Code Postal</label><input type="text" class="form-control" placeholder="{{agent.code_postal}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Ville</label><input type="text" class="form-control" placeholder="{{agent.ville}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Adresse Email</label><input type="text" class="form-control" placeholder="{{agent.mail}}" value="" disabled/></div>
+                </div>
+                <div class="mt-5 text-center"><a href="{% url 'update_agent' agent.id %}"><button class="btn btn-warning profile-button" type="button">Mettre à jour le profil</button></a></div>
+                <div class="mt-5 text-center"><a href="{% url 'delete_agent' agent.id %}"><button class="btn btn-outline-danger profile-button" type="button">Supprimer</button></a></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience"><span>Diplômes</span><a href="{% url 'add_diplome' agent.id %}" style="text-decoration:none"><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Diplôme</span></a></div><br>
+                {% for diplome in diplomes%}
+                <div class="col-md-12"><input type="text" class="form-control" placeholder="{{diplome}}" value="" disabled/></div> <br>
+                {% empty %}
+                <p>Aucun Diplôme</p>
+                {% endfor %}
+            </div>
+            <div class="p-3 py-3">
+                {% if last_vac %}
+                <div class="col-md-8"><label class="labels">Dernière vacation</label><a href="{% url 'detail_vacation_agent' last_vac.id %}"><button class="btn btn-info profile-button" type="button">{{ last_vac.created_at }}</button></a></div>
+                {% else %}
+                <div class="col-md-8"><label class="labels">Dernière vacation</label><a href=""><button class="btn btn-info profile-button" type="button">pas encore de vacation</button></a></div>
+                {% endif %}
+            </div>
+            <div class="p-3 py-3">
+                <div class="col-md-12"><label class="labels">Vacation dans le mois</label><input type="text" class="form-control" placeholder="{{ hours  }} heures {{ minutes }} mins" value="" disabled/></div>
+                <div class="col-md-12"><label class="labels">Vacation mois passé</label><input type="text" class="form-control" placeholder="{{ hours1  }} heures {{ minutes1 }} mins" value="" disabled/></div>
+                <!-- <div class="col-md-12"><label class="labels">Durée restante</label><input type="text" class="form-control" placeholder="{{ jours_restants  }} jours {{ heures_restantes }} heures {{ minutes_restantes }} mins" value="" disabled/></div> -->
+            </div>
+        </div>
+    </div>
+    <div class="row-sm">
+        {% autoescape off %}
+        {{ gantt_plot}}
+        {% endautoescape %}
+    </div>
+</div>
+{% endblock content %}

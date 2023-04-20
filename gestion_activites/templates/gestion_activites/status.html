@@ -1,0 +1,93 @@
+{% extends extend %}
+
+{% block content %}
+<br>
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="col-sm">
+                        <div class="card text-center text-white mb-3" id="total-order" style="background-color: #4cb4c7;"  >
+                            <div class="card-header">
+                                <h6 class="card-title">Missions en cours</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{en_cours}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm">
+                        <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7abecc;">
+                            <div class="card-header">
+                                <h6 class="card-title">Missions terminées</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{termine}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="col-sm-6">
+                        <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7CD1CB;">
+                            <div class="card-header">
+                                <h6 class="card-title">Missions à venir</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{a_venir}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="col-sm">
+                        <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7abecc;"  >
+                            <div class="card-header">
+                                <h6 class="card-title">Vacations terminées</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{termineVac}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm">
+                        <div class="card text-center text-white mb-3" id="total-order" style="background-color: #4cb4c7;">
+                            <div class="card-header">
+                                <h6 class="card-title">Vacations en cours</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{en_coursVac}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6"></div>
+                <div class="col-sm-6">
+                    <div class="col-sm">
+                        <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7CD1CB;">
+                            <div class="card-header">
+                                <h6 class="card-title">Vacations à venir</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{a_venirVac}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

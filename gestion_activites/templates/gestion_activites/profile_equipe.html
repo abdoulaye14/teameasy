@@ -1,0 +1,57 @@
+{% extends extend %}
+
+{% block content %}
+
+{% load static %}
+<br>
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            {% if equipe.responsable_equipe.photo %}
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="{{equipe.responsable_equipe.photo.url}}"><span class="font-weight-bold">{{equipe.nom_equipe}}</span></div>
+            {% else %}
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="{% static 'IMG/profile_defaut.jpg' %}"><span class="font-weight-bold">{{equipe.nom_equipe}}</span></div>
+            {% endif %}
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Paramétrage profile Equipe</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Nom de l'équipe</label><input type="text" class="form-control" placeholder="{{equipe.nom_equipe}}" value="" disabled/></div>
+                    <div class="col-md-6"><label class="labels">Responsable de l'équipe</label><input type="text" class="form-control" value="" placeholder="{{equipe.responsable_equipe.prenom}} {{equipe.responsable_equipe.nom}}" disabled/></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Numéro de téléphone</label><input type="text" class="form-control" placeholder="{{equipe.responsable_equipe.telephone}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Adresse</label><input type="text" class="form-control" placeholder="{{equipe.responsable_equipe.adresse}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Code Postal</label><input type="text" class="form-control" placeholder="{{equipe.responsable_equipe.code_postal}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Ville</label><input type="text" class="form-control" placeholder="{{equipe.responsable_equipe.ville}}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Adresse Email</label><input type="text" class="form-control" placeholder="{{equipe.responsable_equipe.mail}}" value="" disabled/></div>
+                </div>
+                <div class="mt-5 text-center"><a href="{% url 'update_equipe' equipe.id %}"><button class="btn btn-warning profile-button" type="button">Mettre à jour le profil</button></a></div>
+                <div class="mt-5 text-center"><a href="{% url 'delete_equipe' equipe.id %}"><button class="btn btn-outline-danger profile-button" type="button">Supprimer</button></a></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience"><span>Agents</span></div><br>
+                {% for agent in agents %}
+                <div class="col-md-12"><input type="text" class="form-control" placeholder="{{agent.prenom}} {{agent.nom}}" value="" disabled/></div> <br>
+                {% empty %}
+                <p>Aucun agent</p>
+                {% endfor %}
+            </div>
+            <div class="p-3 py-3">
+                {% if last_vac %}
+                <div class="col-md-8"><label class="labels">Dernière vacation</label><a href="{% url 'detail_vacation_equipe' last_vac.id %}"><button class="btn btn-info profile-button" type="button">{{ last_vac.created_at }}</button></a></div>
+                {% else %}
+                <div class="col-md-8"><label class="labels">Dernière vacation</label><input type="text" class="form-control" placeholder="vide" value="" disabled/></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock content %}

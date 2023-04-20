@@ -1,0 +1,80 @@
+{% extends extend %}
+
+{% block content %}
+<div class="container">
+    <div class="row d-flex justify-content-center">
+
+        <div class="col-md-8">
+            <div class="form-wrap">
+                <div class="form-heading">
+                    <h1>Reponse nouvelle vacation</h1>
+                    <p>Veuillez lire le formulaire avant de cliquer sur soumettre</p>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <div class="col-md">
+                            <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7abecc;">
+                                <div class="card-header">
+                                    <h5 class="card-title">Quelques informations sur la vacation </h5>
+                                    
+                                </div>
+                                <div class="card-body">
+                                    <h5>Date de Début : {{vacation.date_debut}}</h5>
+                                    <h5>Date de fin : {{vacation.date_fin}}</h5>
+                                    <h5>Heure de Début : {{vacation.heure_debut}}</h5>
+                                    <h5>Heure de fin : {{vacation.heure_fin}}</h5>
+                                    <h5>Adresse : {{client.rue1}}</h5>
+                                    <h5>Ville : {{client.ville}}</h5>
+                                    <h5>Code postal : {{client.code_postal}}</h5>
+                                    <h5>Nature de la mission : {{vacation.mission.mission.nature_mission}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="form-group" method="post" action="" name="regForm" id="regForm">
+                  {% csrf_token %}
+                    <div class="row">
+                        <div class="form-group">
+                            <label>{{ form.etat_mission.label }}</label>
+                            {{ form.etat_mission }}
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>{{ form.commentaire.label }}</label>
+                        <p>{{ form.commentaire }}</p>
+                    </div>  
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary btn-block" id="submit" value="Soumettre">
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block js %}
+<script>var etat_mission = toString({{vacation.etat_mission}});</script>
+<script>
+    $(document).ready(function(){
+
+        var bt = document.getElementById('submit');
+        bt.disabled = true;
+       
+        alert(etat_mission);
+        //alert("Coucou")
+        //console.log(etat_mission.etat_mission)
+        if (vacation.etat_mission == "EA") {
+            alert("Coucou 1")
+            bt.disabled = false;
+            alert("OK on y est !");
+        } else {
+            bt.disabled = false;
+        }
+    });
+</script>
+{% endblock js %}

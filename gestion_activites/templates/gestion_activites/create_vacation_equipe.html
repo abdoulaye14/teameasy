@@ -1,0 +1,147 @@
+{% extends extend %}
+
+{% block content %}
+
+{% load static %}
+<br>
+
+<div class="container rounded bg-white mt-5 mb-5">
+    <form class="form-group g-3" method="post" action="">
+        {% csrf_token %}
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="p-3 py-5">
+                <br>
+            {% if user.staff %}
+            <div class="row mt-2">
+                <div class="col-md-12"><label class="labels">Nom de la mission</label>{{form.nom}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12"><label class="labels">Client</label>
+                    <select id="client" name="native-select-client" placeholder="Sélection dynamique" data-search="true" data-silent-initial-value-set="true">
+                        {% for client in clients %}
+                            {% if client.id == client_selected.id %}
+                                <option value="{{client.id}}" selected>{{client}}</option>
+                            {% else %}
+                                <option value="{{client.id}}">{{client}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12"><label class="labels">Equipes</label>
+                    <select id="equipe"  name="native-select-equipe" placeholder="Sélection dynamique" data-search="true" data-silent-initial-value-set="true">
+                        {% for equipe in equipes %}
+                            {% if equipe.id == equipe_selected.id %}
+                                <option value="{{equipe.id}}" selected>{{equipe}}</option>
+                            {% else %}
+                                <option value="{{equipe.id}}">{{equipe}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+                {% if current_url == 'update_vacation_equipe' %}
+                <div class="row mt-2">
+                    <div class="col-md-12"><label class="labels">Mission</label>
+                        <select id="mission"  name="native-select-mission" placeholder="Sélection dynamique" data-search="true" data-silent-initial-value-set="true">
+                            {% for mission in missions %}
+                                {% if mission.id == mission_selected.id %}
+                                    <option value="{{mission.id}}" selected>{{mission}}</option>
+                                {% else %}
+                                    <option value="{{mission.id}}">{{mission}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="row mt-2">
+                <div class="col-md-12"><label class="labels">Mission</label><input type="text" class="form-control" placeholder="{{mission_selected}}" value="{{mission_selected}}" disabled/></div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12"><label class="labels">Client</label><input type="text" class="form-control" placeholder="{{client_selected}}" value="{{client_selected}}" disabled/></div> 
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12"><label class="labels">Equipe</label><input type="text" class="form-control" placeholder="{{equipe_selected}}" value="{{equipe_selected}}" disabled/></div>  
+            </div>
+            {% endif %}
+        </div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Paramétrage mission</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Date début de la mission</label>{{ form.date_debut }}</div>
+                    <div class="col-md-6"><label class="labels">Date fin de la mission</label>{{ form.date_fin }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6"><label class="labels">Heure début de la mission</label>{{ form.heure_debut }}</div>
+                    <div class="col-md-6"><label class="labels">Heure fin de la mission</label>{{ form.heure_fin }}</div>
+                </div>
+                <!-- <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Site</label>{{ form.site }}</div>
+                </div> -->
+                <br>
+                <br>
+                {% if current_url == 'create_vacation_equipe' %}
+                <div class="mt-3 text-center"><button class="btn btn-success" type="submit" style="min-width: 50px;">Enregistrer</button></div>
+                <div class="mt-3 text-center"><a href="{% url 'vacations-equipes' %}"><button class="btn btn-dark" type="button" style="min-width: 50px;">Annuler</button></a></div>
+                {% elif current_url == 'update_vacation_equipe' %}
+                <div class="mt-3 text-center"><button class="btn btn-warning" type="submit">Enregistrer les modifications</button></div>
+                <div class="mt-3 text-center"><a href="{% url 'detail_vacation_equipe' vacation.id %}"><button class="btn btn-dark" type="button" style="min-width: 50px;">Annuler</button></a></div>
+                {% endif %}
+                
+            </div>
+        </div>
+        <div class="col-md-4">
+            <br>
+            <div class="p-3 py-5">
+                <div class="row mt-2">
+                    <div class="col-md-12"><label class="labels">Nombre d'incidents</label>{{ form.incident }}</div>
+                    <div class="col-md-12"><label class="labels">Commentaires</label>{{ form.comment }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'JS/virtual-select.min.js' %}"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: '#equipe',
+        showValueAsTags: true,
+        searchPlaceholderText: 'Trouver une équipe...',
+        required: true,
+        disableSelectAll: true,
+        maxValues: 1
+    });
+
+    VirtualSelect.init({
+        ele: '#client',
+        showValueAsTags: true,
+        searchPlaceholderText: 'Trouver un client...',
+        required: true,
+        multiple: false,
+        disableSelectAll: true,
+        maxValues: 1
+    });
+
+    VirtualSelect.init({
+        ele: '#mission',
+        showValueAsTags: true,
+        searchPlaceholderText: 'Trouver un mission...',
+        multiple: false,
+        disableSelectAll: true,
+        maxValues: 1
+    });
+</script>
+{% endblock js %}

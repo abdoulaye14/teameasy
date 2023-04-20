@@ -1,0 +1,150 @@
+{% block content %}
+{% include 'gestion_activites/status_agent.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-5">
+            
+            <div class="row">
+                <div class="col-md">
+                    <div class="card text-center text-black mb-3">
+                        <div class="card-header" style="height: 40%;"><h6 class="card-title">Nombre d'agents</h6></div>
+                        <div class="card-body" style="height:100%">
+                           <h4>{{ nb_equipes }}</h4> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="card text-center text-black mb-3" style="background-color: rgb(189, 189, 45);">
+                        <div class="card-header" style="height: 40%;"><h6 class="card-title">Nombre d'incidents</h6></div>
+                        <div class="card-body" style="height:100%">
+                           <h4>{{mission.incident}}</h4> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row" >
+                <div class="col-md">
+                    <div class="card text-center text-black mb-3">
+                        <div class="card-header" style="height: 40%;"><h6 class="card-title">Heures totales</h6></div>
+                        <div class="card-body" style="max-height:100px">
+                            <h5> {{ heures_tot }} heures {{minutes_tot}} minutes</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md" >
+                    <div class="card text-center text-black mb-3">
+                        <div class="card-header" style="height: 40%;"><h6 class="card-title">Heures travaillées</h6></div>
+                        <div class="card-body" style="max-height:100px">
+                            <h5>{{ heures_ecoul }} heures {{minutes_ecoul}} minutes</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md" >
+                    <div class="card text-center text-black mb-3">
+                        <div class="card-header" style="height: 40%;"><h6 class="card-title">Heures restantes</h6></div>
+                        <div class="card-body" style="max-height:100px">
+                            <h5>{{ heures_rest }} heures {{ minutes_rest }} minutes</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-md">
+                    <form class="" method="post" action="">
+                        {% csrf_token %}
+                        <div class="row justify-content-center" id="comment"> 
+                            <div class="col-md-12" style="padding-bottom: 2px;"><label class="labels" style="background-color: #FFFFFF;"><strong>Commentaires</strong></label><textarea class="form-control" name="comment" cols="40" rows="5" name="comment" placeholder="Ajouter ici un commentaire ..." style="max-height: 200px; min-height: 50px;" onclick="addComment(); this.onclick=null;">{{ mission.comment }}</textarea></div>
+                               
+                        </div>   
+                    </form>
+                </div>
+                    <!-- <div class="card card-body" style="width: 100%; height: 200px">
+                        <h5>Commentaires</h5>
+                        <hr>
+                        {{ mission.client.nature_mission}}
+                    </div>
+                </div> -->
+            </div>
+            <div class="card card-body">
+                <h5 class="text-center">Mission</h5>
+                <div class="row">
+                    <div class="col-md">
+                        <a href="{% url 'update_vacation_equipe' mission.id %}" class="btn btn-outline-warning btn-sm btn-block">Modifier</a>
+                    </div>
+                    <div class="col-md"> 
+                        <a href="{% url 'delete_vacation_equipe' mission.id %}" class="btn btn-outline-danger btn-sm btn-block">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="card text-center text-black mb-3">
+                <div class="card-header"><h5 class="card-title">Vacations par agent</h5></div>
+                <div class="card-body" style="max-width: 100%; max-height: 550px">
+                    <div style="overflow-x:auto;">
+                        <table class="table">
+                            <tr style="margin: 100%;">
+                    
+                                <th>Agent</th>
+                                <th>Date début</th>
+                                <th>Date fin</th>
+                                <th>Statut</th>
+                                <th></th>
+                                <th>Actions</th>
+                                <th></th>
+                            </tr>
+            
+                            {% for vacation in vacations %}
+                            <tr>
+                        
+                                <td>{{vacation.agent}}</td>
+                                <td>{{vacation.date_debut|date:'d-m-Y'}}</td>
+                                <td>{{vacation.date_fin|date:'d-m-Y'}}</td>
+                                <td>
+                                    {% if vacation.date_debut > today %} 
+                                    à venir
+                                    {% elif vacation.date_fin >= vacation.date_debut and vacation.date_fin >= today and today >= vacation.date_debut %}
+                                        {% if today == vacation.date_fin and horaire >= vacation.heure_fin %}
+                                            terminé
+                                        {% elif today == vacation.date_debut and vacation.heure_debut >= horaire %}
+                                            à venir
+                                        {% else %}
+                                            en cours
+                                        {% endif %}
+                                    {% elif today >= vacation.date_fin  %}
+                                    terminé
+                                    {% else %}
+                                    erreur
+                                    {% endif %}
+                                </td>
+                                <td><a href="{% url 'detail_vacation_agent' vacation.id %}" style="margin: 0;" class="btn btn-outline-info btn-sm btn-block">Voir</a></td>
+                                <td><a href="{% url 'update_vacation_agent' vacation.id %}" style="margin: 0;" class="btn btn-outline-warning btn-sm btn-block">Modifier</a></td>
+                                <td><a href="{% url 'delete_vacation_agent' vacation.id %}" style="margin: 0;" class="btn btn-outline-danger btn-sm btn-block">Supprimer</a></td>
+                    
+                            </tr>
+                            {% empty %}
+                            contenu vide
+                            {% endfor %}
+                        </table>
+                    </div>
+                
+                </div>
+            </div>
+            <br>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    function addComment() {
+        const comment = document.getElementById("comment")
+        const listItem = document.createElement("div");
+        listItem.setAttribute("class", "row");
+        listItem.innerHTML = `<button type="submit" class="btn btn-outline-dark col-sm" id="submit" value="ajouter">envoyer</button>`
+        comment.appendChild(listItem);
+    }
+</script>
+{% endblock content %}

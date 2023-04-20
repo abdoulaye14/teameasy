@@ -1,0 +1,71 @@
+{% extends extend %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-3 border-right">
+                {% if vacation.agent.photo %}
+                    <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="{{vacation.agent.photo.url}}"><span class="font-weight-bold">{{equipe.nom_equipe}}</span></div>
+                {% else %}
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="{% static 'IMG/profile_defaut.jpg' %}"><span class="font-weight-bold">{{equipe.nom_equipe}}</span></div>
+                {% endif %}
+            </div>
+            <div class="col-md-5 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Détail vacation</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6"><label class="labels">Client</label><input type="text" class="form-control" placeholder="{{vacation.client}}" value="" disabled/></div>
+                        <div class="col-md-6"><label class="labels">Agent</label><input type="text" class="form-control" value="" placeholder="{{vacation.agent.prenom}} {{vacation.agent.nom}}" disabled/></div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12"><label class="labels">Début de la vacation</label><input type="text" class="form-control" placeholder="{{ vacation.date_debut }}" value="" disabled/></div>
+                        <div class="col-md-12"><label class="labels">Fin de la vacation</label><input type="text" class="form-control" placeholder="{{ vacation.date_fin }}" value="" disabled/></div>
+                        <div class="col-md-12"><label class="labels">Heure de début</label><input type="text" class="form-control" placeholder="{{ vacation.heure_debut }}" value="" disabled/></div>
+                        <div class="col-md-12"><label class="labels">Heure de fin</label><input type="text" class="form-control" placeholder="{{ vacation.heure_fin }}" value="" disabled/></div>
+                    </div>
+                    <div class="mt-5 text-center"><a href="{% url 'update_vacation_agent' vacation.id %}"><button class="btn btn-warning profile-button" type="button">Mettre à jour la vacation</button></a></div>
+                    <div class="mt-5 text-center"><a href="{% url 'delete_vacation_agent' vacation.id %}"><button class="btn btn-outline-danger profile-button" type="button">Supprimer</button></a></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 py-5">
+                    {% if equipe is not None %}
+                    <div class="col-md-12"><label class="labels">Chef d'équipe</label><input type="text" class="form-control" placeholder="{{ equipe }}" value="" disabled/></div>
+                    {% endif %}
+                    <!-- <div class="col-md-12"><label class="labels">Nature vacation</label><input type="text" class="form-control" placeholder="{{ vacation.mission.mission.nature_mission }}" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">critéres exigés</label><input type="text" class="form-control" placeholder="{{ vacation.mission.mission.criteres }}" value="" disabled/></div> -->
+
+                </div>
+                
+                <div class="p-3 py-3">
+                    <div class="col-md-12"><label class="labels">Duree totale</label><input type="text" class="form-control" placeholder="{{ heures_totales }} heures {{ minutes_totales }} mins" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Durée écoulée</label><input type="text" class="form-control" placeholder="{{ heures_ecoulees }} heures {{ minutes_ecoulees }} mins" value="" disabled/></div>
+                    <div class="col-md-12"><label class="labels">Durée restante</label><input type="text" class="form-control" placeholder="{{ heures_restantes }} heures {{ minutes_restantes }} mins" value="" disabled/></div>
+                </div>
+                <div class="p-3 py-3">
+                    <form class="" method="post" action="">
+                        {% csrf_token %}
+                        <div class="row justify-content-center" id="comment">  
+                            <div class="col-md-12" style="padding-bottom: 2px;"><label class="labels">Commentaires</label><textarea class="form-control" name="comment" cols="40" rows="5" name="comment" placeholder="Ajouter ici un commentaire ..." style="max-height: 200px; min-height: 50px;" onclick="addComment(); this.onclick=null;">{{ vacation.comment }}</textarea></div>
+                        </div>   
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+<script>
+    function addComment() {
+        const comment = document.getElementById("comment")
+        const listItem = document.createElement("div");
+        listItem.setAttribute("class", "row");
+        listItem.innerHTML = `<button type="submit" class="btn btn-outline-dark col-sm" id="submit" value="ajouter">envoyer</button>`
+        comment.appendChild(listItem);
+    }
+</script>
+
+{% endblock content %}

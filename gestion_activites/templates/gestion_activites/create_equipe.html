@@ -1,0 +1,120 @@
+{% extends extend %}
+
+{% block content %}
+
+{% load static %}
+<br>
+<div class="container rounded bg-white mt-5 mb-5">
+    
+    <div class="row">
+        <div id="selectedAgents" class="col-md-3 border-right">
+
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Paramétrage équipe</h4>
+                </div>
+                <form class="form-group g-3" method="post" action="">
+                    {% csrf_token %}  
+                    <div class="row mt-5">
+                        <div class="col-md-6" style="font: size 15px;"><label class="">Nom de l'équipe</label></div>
+                        <div class="col-md">
+                            <input type="text" class="form-control" placeholder="Saisir un nom pour votre équipe" value="{{nom_equipe}}" name="nom_equipe" required/>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-6"style="font: size 15px;"><label class="">Responsable de l'équipe</label></div>
+                        <div class="col-md">
+                            <select id="responsable" name="native-select-responsable" placeholder="Sélection dynamique" data-search="true" data-silent-initial-value-set="true">
+                                {% for agent in agents %}
+                                    {% if agent.id == responsable_equipe.id %}
+                                    <option value="{{agent.id}}" selected>{{agent}}</option>
+                                    {% else %}
+                                        <option value="{{agent.id}}">{{agent}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-6" style="font: size 15px;"><label class="">Selectionner vos agents</label></div>
+                        <div class="col-md">
+                            <select id="agents" multiple name="native-select-agents" placeholder="Sélection dynamique" data-search="true" data-silent-initial-value-set="true">
+                                {% for agent in agents %}
+                                    {% if agent.id in agents_selected %}
+                                        <option value="{{agent.id}}" selected>{{agent}}</option>
+                                    {% else %}
+                                        <option value="{{agent.id}}">{{agent}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% if current_url == 'create_equipe' %}
+                    <div class="mt-3 text-center"><button class="btn btn-success" type="submit" style="min-width: 50px;">Enregistrer</button></div>
+                    {% elif current_url == 'update_equipe' %}
+                        <div class="mt-3 text-center"><button class="btn btn-warning" type="submit">Enregistrer les modifications</button></div>
+                        <div class="mt-3 text-center"><a href="{% url 'profile_equipe' equipe.id %}"><button class="btn btn-dark" type="button">Annuler</button></a></div>
+                    {% endif %}
+                    
+                    
+                </form>
+                
+                <!-- <div class="mt-5 text-center"><a href=""><button class="btn btn-warning profile-button" type="button">Mettre à jour le profil</button></a></div> -->
+            </div>
+        </div>
+    </div>
+    
+</div>
+</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'JS/virtual-select.min.js' %}"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: '#responsable',
+        showValueAsTags: true,
+        searchPlaceholderText: 'Trouver un responsable...',
+        required: true,
+        multiple: false,
+        disableSelectAll: true,
+        maxValues: 1,
+    });
+    VirtualSelect.init({
+        ele: '#agents',
+        allOptionsSelectedText: 'Tout',
+        showValueAsTags: true,
+        searchPlaceholderText: 'Trouver des agents...',
+        required: true,
+        setValueAsArray: true,
+    });
+
+    console.log("TEST 000")
+    selected = document.getElementById("agents");
+    const resultats= getSelectValue("agents")
+    
+
+    function getSelectValue(selectId)
+{
+	var elmt = document.getElementById(selectId);
+	if(elmt.multiple == false)
+	{
+		return elmt.options[elmt.selectedIndex].value;
+	}
+	var values = new Array();
+	for(var i=0; i< elmt.options.length; i++)
+	{
+		if(elmt.options[i].selected == true)
+		{
+			values[values.length] = elmt.options[i].value;
+            console.log(elmt.options[i].value); 
+		}
+	}	
+	return values;	
+}
+
+</script>
+{% endblock js %}

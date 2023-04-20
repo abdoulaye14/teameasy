@@ -1,0 +1,31 @@
+{% extends extend %}
+
+{% block content %}
+{% load static %}
+<div class="container rounded bg-white mt-5 mb-5" style="width:40%">
+    <div class="row">
+    
+        <div class="col-md">
+            <div class="p-3 py-5">
+                <div class=" align-items-center mb-3">
+                    <div class="row mt-3">
+                        <div class="col-md-6"><h4 class="text-right"> Diplôme</h4></div>
+                    </div>
+                </div>
+                    
+                <div class="row mt-3">
+                    <div class="col-md-3"><label class="labels" style="font-size: 16px">Diplôme</label></div>
+                    <div class="col-md-3" style="color: blue;">{{diplome}}</div>
+                </div>
+                <div class="row mt-3 text-center">
+                    <div class=" col-md-3 text-center"><a href="{% url 'delete_diplome' diplome.id %}"><button class="btn rounded-pill btn-outline-danger" type="submit">supprimer le diplôme</button></a></div>
+                    <div class=" col-md-3 text-center"><a href="{% url 'update_diplome' diplome.id %}"><button class="btn rounded-pill btn-warning" type="submit">Modifier le diplôme</button></a></div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,182 @@
+{% block content %}
+{% load static %}
+
+
+{% include 'gestion_activites/status.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4" style="min-width: 400px;">
+            <div class="col-md">
+                <div class="card" style="overflow: auto; max-height: 100%;">
+                    <div class="card-header">
+                        <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_vacation_agent' %}">Ajouter une nouvelle vacation individuelle</a>
+                    </div>
+                
+                    <div class="card card-body">
+                        <h6 style="background-color:#e8e8ed; color:black; text-align: center;">Liste des 10 derniéres vacations individuelles</h6>
+                        <table class="table" style="width:100%">
+                            <tr class="table-dashboard-title" style="font-size: 14px;">
+                    
+                                <th>Nom</th>
+                                <th>Date début</th>
+                                <th>Date fin</th>
+                                <th>Statut</th>
+                                <th></th>
+                                <th>Actions</th>
+                                <th></th>
+                            </tr>
+
+                            {% for vacation in vacations %}
+                            <tr style="font-size: 13px;">
+                        
+                                <td>{{ vacation}}</td>
+                                <td>{{vacation.date_debut|date:'d-m-Y'}}</td>
+                                <td>{{vacation.date_fin|date:'d-m-Y'}}</td>
+                                <td>
+                                    {% if vacation.date_debut > today %} 
+                                        à venir
+                                    {% elif vacation.date_fin >= vacation.date_debut and vacation.date_fin >= today and today >= vacation.date_debut %}
+                                        {% if today == vacation.date_fin and horaire >= vacation.heure_fin %}
+                                            terminé
+                                        {% elif today == vacation.date_debut and vacation.heure_debut >= horaire %}
+                                            à venir
+                                        {% else %}
+                                            en cours
+                                        {% endif %}
+                                    {% elif today >= vacation.date_fin  %}
+                                        terminé
+                                    {% else %}
+                                        erreur
+                                    {% endif %}
+                                </td>
+                                <td><a href="{% url 'detail_vacation_agent' vacation.id %}" style="margin: 0;font-size: 11px;" class="btn btn-outline-info btn-sm btn-block">Voir</a></td>
+                                <td><a href="{% url 'update_vacation_agent' vacation.id %}" style="margin: 0;font-size: 11px;" class="btn btn-outline-warning btn-sm btn-block">Modifier</a></td>
+                                <td><a href="{% url 'delete_vacation_agent' vacation.id %}" style="margin: 0;font-size: 11px;" class="btn btn-outline-danger btn-sm btn-block">Supprimer</a></td>
+                            </tr>
+                            {% empty %}
+                                contenu vide
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <br>
+        <div class="col-md-5" style="min-width: 400px;">
+            <div class="col-md">
+                <div class="card" style="overflow: auto; max-height: 100%;">
+                    <div class="card-header">
+                        <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_mission' %}">Ajouter une nouvelle mission</a>    
+                    </div>
+                    
+                    <div class="card card-body">
+                        <h6 style="background-color:#e8e8ed; color:black; text-align: center;">Liste des 10 derniéres missions</h6>
+                    <table class="table" style="width:100%">
+                        <tr class="" style="font-size: 14px;font-family: Lato ,sans-serif; font-size: 16px; padding: 50px 30px 40px;">
+                
+                            <th>Nom</th>
+                            <th>Date début</th>
+                            <th>Date fin</th>
+                            <th>Statut</th>
+                            <th></th>
+                            <th>Actions</th>
+                            <th></th>
+                        </tr>
+                        {% for mission in missions %}
+                        <tr >
+                            
+                            <td>{{ mission.nom}}</td>
+                            <td>{{mission.date_debut|date:'d-m-Y'}}</td>
+                            <td>{{mission.date_fin|date:'d-m-Y'}}</td>
+                            <td id="statut_mission"  style="font-size: 13px;">
+                                <strong id="">
+                                    {% if mission.date_debut > today %} 
+                                        à venir
+                                    {% elif mission.date_fin >= mission.date_debut and mission.date_fin >= today and today >= mission.date_debut %}
+                                        {% if today == mission.date_fin and horaire >= mission.heure_fin %}
+                                            terminé
+                                        {% elif today == mission.date_debut and mission.heure_debut >= horaire %}
+                                            à venir
+                                        {% else %}
+                                            en cours
+                                        {% endif %}
+                                    {% elif today >= mission.date_fin  %}
+                                        terminé
+                                    {% else %}
+                                        erreur
+                                    {% endif %}
+                                </strong>
+                            </td>
+                            <td><a href="{% url 'detail_mission' mission.id %}" style="margin: 0; font-size: 11px;" class="btn btn-outline-info btn-sm btn-block">Voir</a></td>
+                            <td><a href="{% url 'update_mission' mission.id %}" style="margin: 0;font-size: 11px;" class="btn btn-outline-warning btn-sm btn-block">Modifier</a></td>
+                            <td><a href="{% url 'delete_mission' mission.id %}" style="margin: 0;font-size: 11px;" class="btn btn-outline-danger btn-sm btn-block">Supprimer</a></td>
+                            
+                        </tr>
+                        {% empty %}
+                            contenu vide
+                        {% endfor %}
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="col-md-3" style="min-width: 400px;">
+            <div class="col-md">
+                <div class="card" style="overflow: auto; max-height: 100%;">
+                    <div class="card-header">
+                        <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_client' %}">Ajouter un nouveau client</a>
+                    </div>
+                
+                    <div class="card card-body">
+                        <h6 style="background-color:#e8e8ed; color:black; text-align: center;">Liste des clients</h6>
+                        <table class="table" style="width:100%">
+                            <tr class="table-dashboard-title" style="font-size: 14px;">
+                    
+                                <th>Client</th>
+                                <th>Numéro</th>
+                                <th>Ville</th>
+                                
+                            </tr>
+                            {% for client in clients %}
+                            <tr style="font-size: 13px;">
+                                <td>{{ client.nom}}</td>
+                                <td>{{ client.telephone }}</td>
+                                <td>{{ client.ville }}</td>
+                            </tr>
+                            {% empty %}
+                            contenu vide
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+{% endblock content %}
+{% block js %}
+<script>
+    $(document).ready(function(){
+        
+        const values = document.querySelectorAll("#statut_mission");
+        var liste = {{stat_equipe}};
+
+        function changeStatutColor() {
+            for (let i = 0; i < values.length; i++) { // iterate all thorugh statut
+                if (liste[i] == 0) { // check if the mission has been validted
+                    values[i].style.color = "red"; // if matches, change color
+                }
+                else {
+                    values[i].style.color = "#32CD32";
+                }
+            }
+        }
+        changeStatutColor();
+    });
+</script>
+{% endblock js %}

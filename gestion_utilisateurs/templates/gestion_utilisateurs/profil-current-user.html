@@ -1,0 +1,61 @@
+{% extends extend %}
+
+{% block content %}
+{% load static %}
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+    
+        <div class="col-md-8 border-right">
+            <div class="p-3 py-5">
+                <div class=" align-items-center mb-3">
+                    <div class="row mt-3">
+                        {% if user.username %}
+                        <div class="col-md-6"><h4 class="text-right"> {{user.username}}</h4></div>
+                        {% else %}
+                        <div class="col-md-6"><h4 class="text-right"> Champ vide</h4></div>
+                        {% endif %}
+                        <div class=" col-md-3 text-center"><a href="{% url 'update-user' user.id %}"><button class="btn rounded-pill btn-light" type="submit">Modifier le profil</button></a></div>
+                        {% if current_user.staff %}
+                        <div class=" col-md-3 text-center"><a href="{% url 'delete_user' user.id %}"><button class="btn rounded-pill btn-danger" type="submit">Supprimer le profil</button></a></div>
+                        {% endif %}
+                    </div>
+                </div>
+                <form class="form-group " method="post" action="" name="" id="" enctype='multipart/form-data'>
+                    {% csrf_token %}
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-3"><label class="labels" style="font-size: 16px">Identifiant</label></div>
+                        <div class="col-md-3" style="color: blue;">{{user.email}}</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="row mt-3">
+                    <div class="col-md-8"><label class="labels" style="font-size: 16px">Rôle</label></div>
+                    {% if agent %}
+                    <div class=" col-md-3 text-center"><a href="{% url 'profile_agent' agent.id %}"><button class="btn rounded-pill btn-outline-warning">Mes activités</button></a></div>
+                    {% endif %}
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12" style="color: red;"><strong>{% if user.staff %} Administrateur {% elif user.responsable %} Responsable d'équipe {% else %} collaborateur {% endif %}</strong></div>
+                </div>
+                {% if user.responsable %}
+                <hr>
+                <div class="row mt-2">
+                    {% if equipes %}
+                    <div class="col-md-12" style="color: yellowgreen;"><strong>Responsable des équipes suivantes</strong></div>
+                    {% endif %}
+                    {% for equipe in equipes %}
+                    <div class="col-md-12"> {{equipe}}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,37 @@
+.relative {
+    position : relative;
+}
+span {
+    color: rgba(91, 53, 53, 0.719);
+}
+.absolute {
+    position: absolute;
+    bottom : 1px;
+    background-color: rgb(248, 244, 244);
+    width : 250px;
+    height: 230px;
+    color : rgb(15, 14, 14);
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    justify-content:flex-start;
+    border-radius: 0px 0px 22px 22px;
+}
+.iconeC {
+    font-size: 1.4em;
+    color :rgb(183, 240, 195)
+}
+
+.iconeV {
+    font-size: 1.4em;
+    color :rgb(240, 156, 46)
+}
+
+.imgH {
+    height : 300px;
+    width : 250px;
+    filter: drop-shadow(-12px 15px 13px rgba(0, 0, 0, 0.25));
+    border-radius: 22px 22px 22px 22px;
+}
+
+

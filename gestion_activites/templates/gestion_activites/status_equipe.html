@@ -1,0 +1,50 @@
+{% extends extend %}
+
+{% block content %}
+
+<br>
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="col-md">
+                <div class="card text-center text-white mb-3" id="total-order" style="background-color: #4cb4c7;">
+                    <div class="card-header">
+                        <h5 class="card-title">Equipes Validées</h5> 
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{accepte}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col">
+            <div class="col-md">
+                <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7abecc;">
+                    <div class="card-header">
+                        <h5 class="card-title">Equipes en Attente de Validation</h5>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{en_attente}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="col-md">
+                <div class="card text-center text-white mb-3" id="total-order" style="background-color: #7CD1CB;">
+                    <div class="card-header">
+                        <h5 class="card-title">Equipes Invalides</h5>   
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{refus}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,4 @@
+account_sid = 'ACc8dcf517098ce8c8d496c0450f9aa81b'
+auth_token = 'f20236301d8c8460ad5f61746c111df1'
+twilio_num = '+19566668022'
+my_num = '+33651457421'

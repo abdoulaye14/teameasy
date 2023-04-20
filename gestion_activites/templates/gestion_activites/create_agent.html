@@ -1,0 +1,40 @@
+{% extends extend %}
+
+{% block content %}
+{% load static %}
+<div class="container rounded bg-white mt-3 mb-5" style="width:50%; min-width: 40%;">
+    <div class="row align-items-center">
+        <div class="p-3 py-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                {% if current_url == 'create_agent' %}
+                    <h4 class="text-right">Nouvel Agent</h4>
+                {% elif current_url == 'update_agent' %}
+                    <h4 class="text-right">Mise à jour des données de l'agent</h4>
+                {% endif %}
+            </div>
+            <form class="form-group " method="post" action="" name="" id="" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Nom</label>{{form.nom}}</div>
+                    <div class="col-md-6"><label class="labels">Prénom</label>{{form.prenom}}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Identifiant</label>{{form.identifiant}}</div>
+                    <div class="col-md-12"><label class="labels">Adresse</label>{{form.adresse}}</div>
+                    <div class="col-md-12"><label class="labels">Code Postal</label>{{form.code_postal}}</div>
+                    <div class="col-md-12"><label class="labels">Ville</label>{{form.ville}}</div>
+                    <div class="col-md-12"><label class="labels">Numéro de téléphone</label>{{form.telephone}}</div>
+                    <div class="col-md-12"><label class="labels">Adresse Email</label>{{form.mail}}</div>
+                </div>
+                <div class="col-md-12 mt-3"><label class="labels">Photo de profil</label>{{form.photo}}</div>
+                {% if current_url == 'create_agent' %}
+                <div class="mt-3 text-center"><button class="btn btn-success" type="submit" style="min-width: 50px;">Enregistrer</button></div>
+                {% elif current_url == 'update_agent' %}
+                    <div class="mt-3 text-center"><button class="btn btn-warning" type="submit">Enregistrer les modifications</button></div>
+                    <div class="mt-3 text-center"><a href="{% url 'profile_agent' agent.id %}"><button class="btn btn-dark" type="button">Annuler</button></a></div>
+                {% endif %}               
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

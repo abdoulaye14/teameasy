@@ -1,0 +1,13 @@
+{% extends extend %}
+
+{% block content %}
+<form class="form-group" method="post" action="">
+    <fieldset>
+        {% csrf_token %}
+        {{ form.as_p }}
+    </fieldset>
+    <h1> OK</h1>
+    <input type="submit" value="Enregistrer">
+</form>
+
+{% endblock content %}

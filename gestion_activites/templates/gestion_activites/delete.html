@@ -1,0 +1,18 @@
+{% extends extend %}
+
+{% block content %}
+
+{% if obj %}
+<div style="text-align:center; display: flex;justify-content: center;align-items: center;height: 300px;">
+    <form method='POST' action=".">
+        {% csrf_token %}
+        <p> Etes-vous sûrs de vouloir supprimer {{obj}}</p>
+        <a href="{% url url_path obj.id %}" style="margin: 0;" class="btn btn-outline-primary btn-sm btn-block">Annuler</a>
+        <button class="btn btn-outline-danger btn-sm btn-block" type="submit">Oui, je supprime.</button>
+    </form>
+</div>
+
+    
+{% endif %}
+
+{% endblock content %}

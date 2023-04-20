@@ -1,0 +1,166 @@
+{% extends 'gestion_activites/base.html' %}
+
+{% block content %}
+
+{% load static %}
+<br>
+<br>
+<div class="global-container">
+    <nav class="side-nav">
+        <div class="nav-logo bloc-link">
+          <img src="{% static 'IMG/parametre.png' %}">
+          <h5>Management vacations équipes</h5>
+        </div>
+        {% if user.staff %}
+        <a href="{% url 'create_vacation_equipe' %}" class="bloc-link">
+          <img src="{% static 'IMG/profile_defaut.jpg' %}">
+          <span class="nav-links">Ajouter une vacation à une équipe</span>
+        </a>
+        {% endif %}
+    </nav>
+
+    <main class="main-content">
+
+      <div class="input-control">
+        <label for="search">
+          <img src="{% static 'IMG/search.svg' %}">
+        </label>
+        <input type="text" id="search" placeholder="Trouver une vacation" style="background-color:#FFF">
+      </div>
+
+      <h2 class="main-title"></h2>
+
+      <div class="table-search-vacation">
+        <h3 class="table-title">Nom de la mission</h3>
+        <h3 class="table-title">Equipe</h3>
+        <h3 class="table-title">Client</h3>
+        <h3 class="table-title">Date début</h3>
+        <h3 class="table-title">date fin</h3>
+        <h3 class="table-title">Status</h3>
+        <h3 class="table-title">Actions</h3>
+      </div>
+
+      <div class="table-results"></div>
+
+    </main>
+
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript">
+const searchInput = document.querySelector("#search")
+const searchResult = document.querySelector(".table-results")
+
+
+let dataArray;
+let dataClient;
+let dataEquipe;
+
+async function makeRequest(url, method, body){
+  let headers = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+
+  let response = await fetch(url,{
+    method: method,
+    headers: headers,
+    body: body
+  })
+
+  return await response.json()
+}
+
+async function getVacations(){
+  let url = 'http://127.0.0.1:8000/gestion_activites/vacations-equipes';
+  
+  const fields = await makeRequest(url,'get')
+  console.log("function fetch     -------------")
+  const data_agent = fields["content-data"]
+  dataClient = fields["clients"]
+  dataEquipe = fields["equipes"]
+  dataArray = orderList(data_agent)
+  
+  
+  createUserList(dataArray)
+}
+
+getVacations()
+
+function orderList(data) {
+  try {
+    const orderedData = data.sort((a,b) => {
+      if(a["fields"]["nom"].toLowerCase() < b["fields"]["nom"].toLowerCase()) {
+        return -1;
+      }
+      if(a["fields"]["nom"].toLowerCase() > b["fields"]["nom"].toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    })
+    
+    return orderedData;
+  } catch {
+    return NaN;
+  }
+}
+
+
+function createUserList(usersList) {
+
+  try {
+    usersList.forEach(user => {
+
+      const listItem = document.createElement("div");
+      listItem.setAttribute("class", "table-item-vacation");
+
+      listItem.innerHTML = `
+      <a href="detail_vacation_equipe/${user["pk"]}"><div class="">
+      <p class="name" style="color:green">${user["fields"]["nom"]}</p>
+      </div>&nbsp;</a>
+      <p class="name">${dataEquipe[user["pk"]]["nom"]}</p>
+      <p class="client">${dataClient[user["pk"]]["nom"]}</p>
+      <p class="phone">${user["fields"]["date_debut"]}</p>
+      <p class="ville">${user["fields"]["date_fin"]}</p>
+      <p class="code_postal">${user["fields"]["code_postal"]}</p>
+      <p><a href="detail_vacation_equipe/${user["pk"]}" class="btn btn-outline-primary btn-sm col-md-6">Voir</a>
+      </p>
+      `
+      searchResult.appendChild(listItem);
+    })
+  } catch {
+    const listItem = document.createElement("div");
+    listItem.innerHTML = `
+      <p>Aucune vacation trouvée</>
+      `
+      searchResult.appendChild(listItem);
+  }
+
+}
+
+searchInput.addEventListener("input", filterData)
+
+function filterData(e) {
+
+  searchResult.innerHTML = ""
+
+  const searchedString = e.target.value.toLowerCase().replace(/\s/g, "");
+
+  const filteredArr = dataArray.filter(el => 
+    el["fields"]["nom"].toLowerCase().replace(/\s/g, "").includes(searchedString) ||
+    dataClient[el["pk"]]["nom"].toLowerCase().replace(/\s/g, "").includes(searchedString) ||
+    dataEquipe[el["pk"]]["nom"].toLowerCase().replace(/\s/g, "").includes(searchedString)
+    )
+
+  createUserList(filteredArr)
+
+  const titreRecherche = document.querySelector(".main-title")
+  titreRecherche.innerHTML = ""
+  const item = document.createElement("span");
+  item.innerText="Résultat de la recherche"
+  titreRecherche.appendChild(item);
+}
+
+</script>
+{% endblock js %}

@@ -1,0 +1,190 @@
+{% extends 'gestion_activites/base.html' %}
+
+{% block content %}
+{%load crispy_forms_tags %} 
+{% load static %}
+<div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="text-align: left;"><h1 class="heading font-size: 10px; color: #ae5fce;"> Liste Agents </h1></div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-3 text-center"><a href="{% url 'create_agent' %}" class="btn btn-primary">Ajouter Agent</a><a href="{% url 'create_diplome' %}" class="btn btn-primary ml-3">Ajouter un diplôme</a></button></div>
+            </div>
+            <!-- <div class="row">
+              <div class="col-md-3 col-sm-12 mt-2 mb-2 relative " style=" display: flex; justify-content: center;"></div>
+              <div class="col">
+                
+
+              </div>
+            </div> -->
+  <div class="row">
+    <div class="col-md-3" >
+      <div class="card card-body">
+        <form method="get">
+          {{ myFilterAgent.form|crispy }}
+          <!-- <bouton class="btn btn-primary" style="text-align: right;" type="submit"> 
+          Filter</bouton> -->
+          <input type="submit" class="btn btn-primary btn-block" id="submit" value="Filtrer">
+        </form>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="row" style="overflow: auto;">
+             
+        {% for agent in agents %}
+          <div class="col-md col-sm-6 mt-2 mb-2 relative">
+              <img src="{% static 'IMG/profile_defaut.jpg' %}" class="imgH" />
+              <div class="absolute">
+                  <h5 style="margin: 0px;">Nom: <span>{{ agent.nom }}</span> </h5>
+                  <h5 style="margin: 0px;">prenom: <span>{{ agent.prenom }}</span> </h5>   
+                  <h5 style="margin: 0px;">telephone: <span>{{ agent.telephone }}</span> </h5>  
+                  <h5 style="margin: 0px;">disponibilite: <span>{{ agent.disponibilite }}</span> </h5> 
+                  <small>
+                    <div style="margin-top: 2px; bottom: 0px;" >
+                      <a href="{% url 'update_agent' agent.id %}" style="margin: 0px;" class="btn rounded-pill btn-warning">Modifier</a>
+                      <button type="button" style="margin: 0px" class="btn rounded-pill btn-info" data-bs-toggle="modal" data-bs-target="#ABCD_{{ agent.id }}" data-bs-whatever="@getbootstrap">+ infos</button>
+                      <a href="{% url 'delete_agent' agent.id %}" style="margin: 0px;" class="btn rounded-pill btn-danger ">Supprimer</a>
+                      <a href="{% url 'add_diplome' agent.id %}" style="margin: 0px;" class="btn rounded-pill btn-dark ">Diplomes</a>
+                    </div>
+                  </small>
+                  
+              </div>
+          </div>
+          <div class="modal fade" id="ABCD_{{ agent.id }}" tabindex="-1" aria-labelledby="addEventLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addEventLabel">information sur {{ agent.nom }} </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                
+                    <div class="modal-body">
+                       <div class="row">
+                          <div class="col-md-5">
+                              <p>identifiant :</p>
+                          </div>
+                          <div class="col-md-7">
+                              <p> {{ agent.identifiant }}</p>
+                          </div>
+                        </div>
+                        <div class="row">
+                             <div class="col-md-5">
+                                <p>nom et prenom :</p>
+                             </div>
+                             <div class="col-md-7">
+                                <p>{{agent.nom}} {{agent.prenom}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-5">
+                             <p>Adresse : </p>
+                          </div>
+                          <div class="col-md-7">
+                             <p>{{agent.adresse}}</p>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                               <p>Code Postal : </p>
+                            </div>
+                            <div class="col-md-7">
+                               <p>{{agent.code_postal}}</p>
+                           </div>
+                         </div>
+                         <div class="row">
+                            <div class="col-md-5">
+                                <p>ville : </p>
+                            </div>
+                            <div class="col-md-7">
+                                <p>{{agent.ville}}</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-5">
+                              <p>Téléphone : </p>
+                            </div>
+                            <div class="col-md-7">
+                              <p>{{agent.telephone}}</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-5">
+                              <p>Email : </p>
+                            </div>
+                            <div class="col-md-7">
+                              <p>{{ agent.mail }}</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-5">
+                                <p>Diplome : </p>
+                            </div>
+                            <div class="col-md-7">
+                              <p>{{agent.diplomes}}</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-5">
+                                  <p>disponibilite : </p>
+                              </div>
+                              <div class="col-md-7">
+                                  <p>{{agent.disponibilite}}</p>
+                              </div>
+                            </div>
+                      
+                    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                       
+                    </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+</div>
+<!--             
+            <div class="modal fade" id="formFiltrer" tabindex="-1" aria-labelledby="addEventLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="addEventLabel">filtrer par Code postal  et/ou par Diplome </h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form class="form-group" method="get" action="" id="regForm">
+                        {%csrf_token%}
+                        <div class="modal-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>{{ form.code_postal.label }}</label>
+                                    {{ form.code_postal }}
+                                </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>{{ form.diplomes.label }}</label>
+                                    {{ form.diplomes }}
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                                <input type="submit" class="btn btn-primary btn-block" id="submit">
+                        </div>
+                      </form>
+                </div>
+              </div>
+          </div>
+
+        </div>
+
+</div> -->
+{% endblock content %}
+
+

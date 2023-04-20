@@ -1,0 +1,100 @@
+<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}"><strong style="color: #FFFF;">Team</strong><strong style="color: #32CD32;">Easy</strong></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {% if request.user.is_authenticated %}
+      <ul class="navbar-nav me-auto justify-content-center flex-grow-1 pe-3">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">Accueil <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'diplomes' %}">Diplômes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'agents' %}">Agents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'equipes' %}">Equipes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'clients' %}">Clients</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'missions' %}">Missions</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Vacations
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'vacations-agents' %}">Par agent</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'vacations-equipes' %}">Par équipe</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="navbar-nav me-auto justify-content-end " id="navbarSupportedUser">
+        <li>
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle hello-msg" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Bienvenue, {{request.user}}
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'profil-current-user' request.user.id %}">Données personnelles</a></li>
+                {% if request.user.staff %}
+                <li><a class="dropdown-item" href="{% url 'register' %}">Ajouter un utilisateur</a></li>
+                <li><a class="dropdown-item" href="{% url 'users' %}">Lister les utilisateurs</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Déconnexion</a></li>
+              </ul>
+            </li>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3" id="navbarSupportedUser">
+          <li><a class="nav-link hello-msg" href="{% url 'login' %}">Se connecter</a></li>
+          <li><a class="nav-link hello-msg" href="{% url 'register' %}">Inscription</a></li>
+      </ul>
+      {% endif %}
+      
+    </div>
+  </div>
+</nav>
+
+{% include 'gestion_activites/messages.html' %}
+<br>
+<style>
+  .hello-msg{
+    font-size: 14px;
+    color: #FFF;
+    margin-right: 20px;
+  }
+</style>
+<!-- A voir pour les pages details -->
+<!-- <div class="container-fluid col-md-8">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">...</div>
+  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
+  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+  <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
+</div>
+</div> -->
